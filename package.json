@@ -1,0 +1,23 @@
+{
+  "name": "express-route-averages",
+  "version": "1.0.0",
+  "description": "A small project to gain familiarity with express routing",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Treviisolion/ExpressAverages.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Treviisolion/ExpressAverages/issues"
+  },
+  "homepage": "https://github.com/Treviisolion/ExpressAverages#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
