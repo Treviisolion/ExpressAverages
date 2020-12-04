@@ -9,22 +9,59 @@ const app = express();
  */
 const breakInput = string => {
     try {
-        const arr = string.split(',').filter(v => v !== '')
-        if (arr.length === 0) throw "nums must have numbers"
+        const arr = string.split(',').filter(v => v !== '');
+        if (arr.length === 0) throw "nums must have numbers";
         return arr.map(v => {
-            if (isNaN(parseFloat(v))) throw `${v} is not a number`
-            else return parseFloat(v)
+            if (isNaN(parseFloat(v))) throw `${v} is not a number`;
+            else return parseFloat(v);
         })
     } catch (e) {
-        if (typeof e === 'string') throw new ExpressError(e, 400)
-        else throw new ExpressError("nums must be present as query parameter", 400)
+        if (typeof e === 'string') throw new ExpressError(e, 400);
+        else throw new ExpressError("nums must be present as query parameter", 400);
     }
+}
+
+/**
+ * Returns the mean of the numbers
+ * @param {Array[floats]} nums 
+ */
+const calculateMean = nums => {
+    return nums.reduce((tot, v) => tot + v) / nums.length;
+}
+
+/**
+ * Returns the median of the numbers
+ * @param {Array[floats]} nums 
+ */
+const calculateMedian = nums => {
+    return nums.length % 2 === 1 ? nums[Math.floor(nums.length / 2)] : (nums[nums.length / 2] + nums[nums.length / 2 - 1]) / 2;
+}
+
+/**
+ * Returns the mode of the numbers
+ * @param {Array[floats]} nums 
+ */
+const calculateMode = nums => {
+    const frequencies = {}
+    for (let num of nums) {
+        if (frequencies[num]) frequencies[num] += 1;
+        else frequencies[num] = 1;
+    }
+    let mode = null;
+    let freq = 0;
+    for (let num in frequencies) {
+        if (frequencies[num] > freq) {
+            freq = frequencies[num];
+            mode = num;
+        }
+    }
+    return mode;
 }
 
 app.get('/mean', (req, res, next) => {
     try {
-        const nums = breakInput(req.query.nums)
-        const mean = nums.reduce((tot, v) => tot + v) / nums.length
+        const nums = breakInput(req.query.nums);
+        const mean = calculateMean(nums);
         return res.json({
             response: {
                 operation: 'mean',
@@ -32,14 +69,14 @@ app.get('/mean', (req, res, next) => {
             }
         });
     } catch (e) {
-        return next(e)
+        return next(e);
     }
 });
 
 app.get('/median', (req, res, next) => {
     try {
-        const nums = breakInput(req.query.nums).sort()
-        const median = nums.length % 2 === 1 ? nums[Math.floor(nums.length / 2)] : (nums[nums.length / 2] + nums[nums.length / 2 - 1]) / 2;
+        const nums = breakInput(req.query.nums).sort();
+        const median = calculateMedian(nums);
         return res.json({
             response: {
                 operation: 'median',
@@ -47,26 +84,14 @@ app.get('/median', (req, res, next) => {
             }
         });
     } catch (e) {
-        return next(e)
+        return next(e);
     }
 });
 
 app.get('/mode', (req, res, next) => {
     try {
-        const nums = breakInput(req.query.nums).sort()
-        const frequencies = {}
-        for (let num of nums) {
-            if (frequencies[num]) frequencies[num] += 1;
-            else frequencies[num] = 1;
-        }
-        let mode = null;
-        let freq = 0;
-        for (let num in frequencies) {
-            if (frequencies[num] > freq) {
-                freq = frequencies[num];
-                mode = num
-            }
-        }
+        const nums = breakInput(req.query.nums);
+        const mode = calculateMode(nums);
         return res.json({
             response: {
                 operation: 'mode',
@@ -74,9 +99,28 @@ app.get('/mode', (req, res, next) => {
             }
         });
     } catch (e) {
-        return next(e)
+        return next(e);
     }
 });
+
+app.get('/all', (req, res, next) => {
+    try {
+        const nums = breakInput(req.query.nums).sort();
+        const mean = calculateMean(nums);
+        const median = calculateMedian(nums);
+        const mode = calculateMode(nums);
+        return res.json({
+            response: {
+                operation: 'all',
+                mean: mean,
+                median: median,
+                mode: mode
+            }
+        });
+    } catch (e) {
+        return next(e);
+    }
+})
 
 // 404 handler
 app.use(function (req, res, next) {
