@@ -24,14 +24,21 @@ const breakInput = string => {
 app.get('/mean', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums)
-        return res.json({response:{operation: 'mean', value: nums.reduce((tot, v) => tot + v)/nums.length}});
+        const mode = nums.reduce((tot, v) => tot + v)/nums.length
+        return res.json({response:{operation: 'mean', value: mode}});
     } catch (e) {
         return next(e)
     }
 });
 
 app.get('/median', (req, res) => {
-
+    try {
+        const nums = breakInput(req.query.nums).sort()
+        const median = nums.length % 2 === 1 ? nums[Math.floor(nums.length/2)] : (nums[nums.length/2] + nums[nums.length/2 - 1])/2;
+        return res.json({response:{operation: 'median', value: median}});
+    } catch (e) {
+        return next(e)
+    }
 });
 
 app.get('/mode', (req, res) => {
