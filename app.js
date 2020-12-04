@@ -24,8 +24,8 @@ const breakInput = string => {
 app.get('/mean', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums)
-        const mode = nums.reduce((tot, v) => tot + v)/nums.length
-        return res.json({response:{operation: 'mean', value: mode}});
+        const mean = nums.reduce((tot, v) => tot + v)/nums.length
+        return res.json({response:{operation: 'mean', value: mean}});
     } catch (e) {
         return next(e)
     }
@@ -42,7 +42,13 @@ app.get('/median', (req, res, next) => {
 });
 
 app.get('/mode', (req, res, next) => {
-
+    try {
+        const nums = breakInput(req.query.nums).sort()
+        const mode = nums.length % 2 === 1 ? nums[Math.floor(nums.length/2)] : (nums[nums.length/2] + nums[nums.length/2 - 1])/2;
+        return res.json({response:{operation: 'mode', value: mode}});
+    } catch (e) {
+        return next(e)
+    }
 });
 
 // 404 handler
