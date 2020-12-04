@@ -31,7 +31,7 @@ app.get('/mean', (req, res, next) => {
     }
 });
 
-app.get('/median', (req, res) => {
+app.get('/median', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums).sort()
         const median = nums.length % 2 === 1 ? nums[Math.floor(nums.length/2)] : (nums[nums.length/2] + nums[nums.length/2 - 1])/2;
@@ -41,7 +41,7 @@ app.get('/median', (req, res) => {
     }
 });
 
-app.get('/mode', (req, res) => {
+app.get('/mode', (req, res, next) => {
 
 });
 
