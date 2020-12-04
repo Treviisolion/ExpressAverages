@@ -24,8 +24,13 @@ const breakInput = string => {
 app.get('/mean', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums)
-        const mean = nums.reduce((tot, v) => tot + v)/nums.length
-        return res.json({response:{operation: 'mean', value: mean}});
+        const mean = nums.reduce((tot, v) => tot + v) / nums.length
+        return res.json({
+            response: {
+                operation: 'mean',
+                value: mean
+            }
+        });
     } catch (e) {
         return next(e)
     }
@@ -34,8 +39,13 @@ app.get('/mean', (req, res, next) => {
 app.get('/median', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums).sort()
-        const median = nums.length % 2 === 1 ? nums[Math.floor(nums.length/2)] : (nums[nums.length/2] + nums[nums.length/2 - 1])/2;
-        return res.json({response:{operation: 'median', value: median}});
+        const median = nums.length % 2 === 1 ? nums[Math.floor(nums.length / 2)] : (nums[nums.length / 2] + nums[nums.length / 2 - 1]) / 2;
+        return res.json({
+            response: {
+                operation: 'median',
+                value: median
+            }
+        });
     } catch (e) {
         return next(e)
     }
@@ -44,8 +54,25 @@ app.get('/median', (req, res, next) => {
 app.get('/mode', (req, res, next) => {
     try {
         const nums = breakInput(req.query.nums).sort()
-        const mode = nums.length % 2 === 1 ? nums[Math.floor(nums.length/2)] : (nums[nums.length/2] + nums[nums.length/2 - 1])/2;
-        return res.json({response:{operation: 'mode', value: mode}});
+        const frequencies = {}
+        for (let num of nums) {
+            if (frequencies[num]) frequencies[num] += 1;
+            else frequencies[num] = 1;
+        }
+        let mode = null;
+        let freq = 0;
+        for (let num in frequencies) {
+            if (frequencies[num] > freq) {
+                freq = frequencies[num];
+                mode = num
+            }
+        }
+        return res.json({
+            response: {
+                operation: 'mode',
+                value: mode
+            }
+        });
     } catch (e) {
         return next(e)
     }
